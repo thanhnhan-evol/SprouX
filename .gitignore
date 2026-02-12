@@ -1,0 +1,24 @@
+node_modules
+dist
+.DS_Store
+.tmp.driveupload
+.tmp.drivedownload
+
+# Secrets & local config
+.figma-config.json
+.env
+.env.*
+
+# IDE / editor / local tools
+.vscode
+*.code-workspace
+.claude/
+.mcp/
+.mcp.json
+
+# Google Drive symlinks
+Beincom Product 2026
+Pham Thanh Nhan
+SprouX Logo
+SprouX_Design-System
+SprouX_UI-UX team

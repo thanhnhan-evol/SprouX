@@ -285,8 +285,7 @@ The `text-*` prefix conflicts with `tailwind-merge` (used in `cn()`). When both 
 |---|---|---|---|
 | `618:31276` | `#0f766e` | `--primary` | `bg-primary` |
 | `618:31275` | `#252522` | `--foreground` | `text-foreground` |
-| `618:31281` | `#afafab` | `--muted-foreground` | `text-muted-foreground` |
-| `618:31281` ⚠️ | `#6f6f6a` | Note: Figma icons render `618:31281` as `#6f6f6a` — use `text-ghost-foreground` for icon colors |  |
+| `618:31281` | `#6f6f6a` | `--muted-foreground` | `text-muted-foreground` |
 | `643:77308` | `#6f6f6a` | `--ghost-foreground` | `text-ghost-foreground` |
 | `618:31285` | `#e9e9e7` | `--border` | `border-border` |
 | `644:34026` | `#afafab` | `--border-strong` | `border-border-strong` |

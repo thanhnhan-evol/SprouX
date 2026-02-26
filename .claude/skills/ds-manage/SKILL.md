@@ -202,10 +202,21 @@ function XxxDocs() {
 ```
 
 **Rules:**
-- **XxxExploreBehavior**: Custom component riêng (không dùng `<Playground>`), controls panel dưới dùng Select/Switch matching ALL Figma variant properties
-- **Examples 2-column grid**: BẮT BUỘC wrap trong `<div className="grid grid-cols-1 lg:grid-cols-2 gap-6">` để show nhiều ví dụ cùng lúc
+- **XxxExploreBehavior**: Custom component riêng (không dùng `<Playground>`), controls panel dưới:
+  - **100% Figma property coverage — KHÔNG CÓ NGOẠI LỆ:**
+    - Variant enum → `<Select>` (kể cả responsive variants)
+    - Variant enum 1 option → `<Select disabled>`
+    - Boolean → `<Switch>`
+    - Instance swap Icon → `<IconPicker>` (disable khi parent toggle off)
+    - Instance swap Slot/Content → `<Select>` (swap giữa content variants)
+    - Text override → `<Input>`
+  - IconPicker icons + text PHẢI dùng `text-muted-foreground`
+  - Controls PHẢI enforce Figma variant constraints
+- **Static preview**: shadow dùng đúng Figma mapping (shadow-sm → `shadow`, KHÔNG `shadow-lg`), radius dùng `rounded-xl` (12px)
+- **Overlay**: `bg-black/50` (KHÔNG `bg-black/80`)
+- **Examples 2-column grid**: BẮT BUỘC wrap trong `<div className="grid grid-cols-1 lg:grid-cols-2 gap-6">`
 - **XxxPropsTable** & **XxxTokensTable**: Tạo function riêng trước XxxDocs
-- **Best Practices**: BẮT BUỘC đọc `design-system-component-usage-guidelines.md` để lấy "Use when", "Avoid when", "Common mistakes"
+- **Best Practices**: BẮT BUỘC đọc `design-system-component-usage-guidelines.md`
 - **Accessibility**: Document role, aria-* attributes, keyboard navigation, focus indicator
 - **TableOfContents sections**: Khai báo `const xxxSections` trước XxxDocs
 - **FigmaMapping nodeId**: Lấy từ Figma component set node ID (Bước 6.2)
@@ -300,6 +311,28 @@ The `text-*` prefix conflicts with `tailwind-merge` (used in `cn()`). When both 
 | 6px | `--radius-md` | `rounded-md` |
 | 8px | `--radius-lg` | `rounded-lg` |
 | 12px | `--radius-xl` | `rounded-xl` |
+
+### Shadow Effect Style Mapping (Figma ≠ Tailwind)
+
+**CRITICAL**: Figma shadow names are OFFSET by one level from Tailwind. ALWAYS use this mapping:
+
+| Figma Effect Style | Tailwind Class | CSS Value |
+|-------------------|---------------|-----------|
+| `shadow-sm` | `shadow` (DEFAULT) | `0 1px 3px rgba(0,0,0,0.1), 0 1px 2px -1px rgba(0,0,0,0.1)` |
+| `shadow-md` | `shadow-md` | `0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -2px rgba(0,0,0,0.1)` |
+| `shadow-lg` | `shadow-lg` | `0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -4px rgba(0,0,0,0.1)` |
+
+**Common mistake**: Using `shadow-lg` when Figma uses "shadow-sm" (which maps to Tailwind `shadow`).
+
+**Applies to**: Dialog, Alert Dialog, Sheet, Sonner/Toast, Dropdown Menu, Popover, and all floating UI.
+
+### Overlay Opacity
+
+**Rule**: All overlay/backdrop components use `bg-black/50` (50% opacity), matching both Figma spec and Shadcn v4 standard.
+
+**KHÔNG dùng**: `bg-black/80` (quá tối, legacy value).
+
+**Applies to**: Dialog, Alert Dialog, Sheet, Drawer.
 
 ### Disabled Opacity
 

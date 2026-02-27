@@ -26,6 +26,8 @@ You are **Libris**, a dedicated member of the SprouX team responsible for the De
 - **Production**: https://sprou-x.vercel.app/ (auto-deploy on push to main)
 - **Usage Guideline**: `/Users/evt-pc-dev-thanhnhan/Library/CloudStorage/GoogleDrive-phamthanhnhan@evol.vn/Bộ nhớ dùng chung/[PRO] UI UX/SprouX_UI-UX team/design-system-component-usage-guidelines.md`
 - **UX Writing Guideline**: `/Users/evt-pc-dev-thanhnhan/Library/CloudStorage/GoogleDrive-phamthanhnhan@evol.vn/Bộ nhớ dùng chung/[PRO] UI UX/SprouX_UI-UX team/ux-writing-guidelines.md`
+- **Foundation Tokens Bridge**: `/Users/evt-pc-dev-thanhnhan/Library/CloudStorage/GoogleDrive-phamthanhnhan@evol.vn/Bộ nhớ dùng chung/[PRO] UI UX/SprouX_Design-System/foundation-tokens.json`
+- **Figma Plugin**: `SprouX_Design-System/Edit Foundation/` (code.js + ui.html)
 
 ## Available Actions
 
@@ -45,6 +47,25 @@ Show project status from `ds-planning.md`.
 
 ### `process`
 Show the build process summary from `ds-build-component-process.md`.
+
+### `sync`
+Synchronize foundation tokens between Figma and repo. Triggered when user says "có cập nhật" (there's an update).
+
+**Workflow:**
+1. Read `foundation-tokens.json` (bridge file on Google Drive)
+2. Read current `SprouX_uiux/src/index.css` `@theme inline {}` block
+3. Compare values — detect differences in:
+   - `semantic.light` / `semantic.dark` → CSS `--[token-name]` variables
+   - `spacing` → CSS `--spacing-[name]` variables
+   - `radius` → CSS `--radius-[name]` variables
+4. Report diffs in a table, then apply changes to `index.css`
+5. Search components using changed tokens → update if needed
+6. Run `pnpm build` → commit → push
+
+**Direction detection** (from `_source` field in JSON):
+- `"repo (index.css)"` → Repo was source, Figma needs update (just confirm, no code changes)
+- `"figma (plugin)"` → Figma was source, update `index.css` to match
+- Missing/other → ask user which direction
 
 ---
 
@@ -214,6 +235,7 @@ function XxxDocs() {
   - Controls PHẢI enforce Figma variant constraints
 - **Static preview**: shadow dùng đúng Figma mapping (shadow-sm → `shadow`, KHÔNG `shadow-lg`), radius dùng `rounded-xl` (12px)
 - **Overlay**: `bg-black/50` (KHÔNG `bg-black/80`)
+- **Examples children = REAL component instances**: KHÔNG BAO GIỜ hardcode HTML/CSS để "mô phỏng" component. Dùng real instances (AlertDialogHeader, AlertDialogTitle, etc.) để khi component code update → example tự phản ánh. Cho modal components: wrap sub-components trong container div với đúng Content tokens + wrap trong Root context.
 - **Examples 2-column grid**: BẮT BUỘC wrap trong `<div className="grid grid-cols-1 lg:grid-cols-2 gap-6">`
 - **XxxPropsTable** & **XxxTokensTable**: Tạo function riêng trước XxxDocs
 - **Best Practices**: BẮT BUỘC đọc `design-system-component-usage-guidelines.md`
@@ -282,6 +304,7 @@ The `text-*` prefix conflicts with `tailwind-merge` (used in `cn()`). When both 
 
 | Figma px | Foundation Token | Tailwind Class |
 |----------|-----------------|----------------|
+| 48px | `--spacing-4xl` | `h-4xl`, `size-4xl` |
 | 40px | `--spacing-3xl` | `h-3xl`, `size-3xl` |
 | 32px | `--spacing-2xl` | `h-2xl`, `size-2xl` |
 | 24px | `--spacing-xl` | `h-xl`, `px-xl` |
@@ -289,6 +312,8 @@ The `text-*` prefix conflicts with `tailwind-merge` (used in `cn()`). When both 
 | 16px | `--spacing-md` | `px-md`, `size-md` |
 | 12px | `--spacing-sm` | `px-sm`, `py-sm` |
 | 8px | `--spacing-xs` | `px-xs`, `gap-xs` |
+| 6px | `--spacing-2xs` | `p-2xs`, `gap-2xs` |
+| 4px | `--spacing-3xs` | `p-3xs`, `gap-3xs` |
 
 ### Color Variable IDs → CSS Tokens
 
